@@ -1,0 +1,32 @@
+#!/usr/bin/env python3.6
+
+import ftplib
+import os 
+
+"""
+ftiakse to path kai to arxeios 
+"""
+myPath = '/home/pi/media/WD_2TB/THANOSTAK/Downloads'
+
+def ftp_upload(ftp_obj, path):
+    """
+    A function for uploading files to an FTP server
+    @param ftp_obj: The file transfer protocol object
+    @param path: The path to the file to upload
+    """
+    files = os.listdir(path)
+    os.chdir(path)
+    for f in files:
+        if os.path.isfile(path + r'\{}'.format(f)):
+            with open(f, 'rb') as fobj:
+                ftp.storbinary(f'STOR {f}', fobj, 1024)
+        elif os.path.isdir(path + r'\{}'.format(f)):
+            ftp.mkd(f)
+            ftp.cwd(f)
+            ftp_upload(path + r'\{}'.format(f))
+if __name__ == '__main__':
+    ftp = ftplib.FTP('10.10.0.1')
+    ftp.login()
+    ftp.cwd("shares/USB_Storage/Movies")
+#    path = os.chdir('/home/pi/media/WD_2TB/THANOSTAK/Downloads/')
+    ftp_upload(ftp, myPath)
